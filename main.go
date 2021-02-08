@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"path/filepath"
 
+	_ "download/statik"
 	"github.com/cavaliercoder/grab"
 	"github.com/gin-gonic/gin"
+	"github.com/rakyll/statik/fs"
 )
 
 var (
@@ -21,10 +24,12 @@ func main() {
 	Port := flag.String("p", "1018", "Run Port")
 	flag.Parse()
 
+	statikFS, _ := fs.New()
 	r := gin.Default()
 	r.POST("download", Download)
 	r.GET("state", State)
 
+	r.StaticFS("/web", statikFS)
 	r.Run(":" + *Port)
 	log.Fatal("端口被占用")
 }
@@ -70,6 +75,23 @@ func Download(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  http.StatusText(http.StatusBadRequest),
 			"message": "参数不正确",
+		})
+		return
+	}
+
+	u, err := url.Parse(jsonStr["link"])
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusText(http.StatusBadRequest),
+			"message": "参数不正确",
+		})
+		return
+	}
+
+	if !u.IsAbs() {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusText(http.StatusBadRequest),
+			"message": "下载地址的URL格式不正确",
 		})
 		return
 	}
