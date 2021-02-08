@@ -11,3 +11,14 @@ curl -L -X POST '192.168.0.166:1018/download' \
 ```
 curl -L -X GET '192.168.0.166:1018/state'
 ```
+
+
+## help
+```
+[root@mzky download]# ./download -h
+Usage of ./download:
+  -d string
+    	Save File Directory (default "/mnt/share/Download")
+  -p string
+    	Run Port (default "1018")
+```
