@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
+	"time"
 
 	_ "download/statik"
 
@@ -36,38 +37,7 @@ func main() {
 }
 
 func State(c *gin.Context) {
-	if Resp == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"size":     "",
-			"status":   "OK",
-			"message":  "无下载任务",
-			"filename": "",
-		})
-		return
-	}
-	if Resp.IsComplete() {
-		if Resp.Err() != nil {
-			c.JSON(Resp.HTTPResponse.StatusCode, gin.H{
-				"status":  Resp.HTTPResponse.Status,
-				"message": "下载失败",
-				"error":   Resp.Err().Error(),
-			})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"size":     Unwrap(Resp.BytesComplete()),
-			"status":   "OK",
-			"message":  "下载完成",
-			"filename": filepath.Base(Resp.Filename),
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"size":     Unwrap(Resp.BytesComplete()),
-		"status":   "OK",
-		"message":  "下载中...",
-		"filename": filepath.Base(Resp.Filename),
-	})
+	public(c)
 }
 
 func Download(c *gin.Context) {
@@ -120,14 +90,47 @@ func Download(c *gin.Context) {
 	go func() {
 		Resp = client.Do(req)
 	}()
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":  "OK",
-		"message": "开始下载",
-	})
+	time.Sleep(time.Second)
+	public(c)
 }
 
-func Unwrap(num int64) string {
+func unwrap(num int64) string {
 	f := float64(num) / 1024 / 1024
 	return fmt.Sprintf("%.2fM", f)
+}
+
+func public(c *gin.Context) {
+	if Resp == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"size":     "",
+			"status":   http.StatusText(http.StatusBadRequest),
+			"message":  "无下载任务或已下载失败",
+			"filename": "",
+		})
+		return
+	}
+	if Resp.IsComplete() {
+		if Resp.Err() != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  http.StatusText(http.StatusBadRequest),
+				"message": "下载失败",
+				"error":   Resp.Err().Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"size":     unwrap(Resp.BytesComplete()),
+			"status":   "OK",
+			"message":  "下载完成",
+			"filename": filepath.Base(Resp.Filename),
+		})
+		Resp = nil
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"size":     unwrap(Resp.BytesComplete()),
+		"status":   "OK",
+		"message":  "下载中...",
+		"filename": filepath.Base(Resp.Filename),
+	})
 }

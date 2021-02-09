@@ -26,22 +26,21 @@
 							<div class="widget-body am-fr">
 								<form class="am-form tpl-form-line-form">
 									<div class="am-form-group">
-										<label for="link" class="am-u-sm-12 am-form-label am-text-left"><a color="blue">下载地址</a> <span class="tpl-form-line-small-title">Link</span></label>
+										<label for="link" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">下载地址</strong> <span class="tpl-form-line-small-title">Link</span></label>
 										<div class="am-u-sm-12">
 											<input type="text" class="tpl-form-input am-margin-top-xs" id="link" placeholder="Input Link">
-											<small>仅支持http下载</small>
 										</div>
 									</div>
 									
 									<div class="am-form-group">
-										<label for="state" class="am-u-sm-12 am-form-label am-text-left"><a color="blue">下载状态</a> <span class="tpl-form-line-small-title">State</span></label>
+										<label for="state" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">下载状态</strong> <span class="tpl-form-line-small-title">State</span></label>
 										<div class="am-u-sm-12">
 											<input type="text" class="tpl-form-input am-margin-top-xs" id="message" readonly="readonly" placeholder="Download State">
 										</div>
 									</div>
 									
 									<div class="am-form-group">
-										<label for="size" class="am-u-sm-12 am-form-label am-text-left"><a color="blue">文件已下载大小</a> <span class="tpl-form-line-small-title">Size</span></label>
+										<label for="size" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">文件已下载大小</strong> <span class="tpl-form-line-small-title">Size</span></label>
 										<div class="am-u-sm-12">
 											<input type="text" class="tpl-form-input am-margin-top-xs" id="size" readonly="readonly" placeholder="File Size">
 										</div>
@@ -71,6 +70,20 @@
 		            top: 0px!important;
 		            width:62%;
 		        }
+				.blue{
+					color: #00b8d9;
+				}
+				.tpl-form-input .am-margin-top-xs{
+					color: #d5bc8b;
+				}
+				.growl .growl-message {
+					font-size: 18px;
+					line-height: 28px;
+				}
+				.growl .growl-title {
+					font-size: 14px;
+					line-height: 26px;
+				}
 		</style>
 
 		<script>
@@ -89,11 +102,11 @@
 						data: JSON.stringify(data),
 						success:  function(res) {
 							$('#message').val(res.message)
-							$.growl.notice({title: "信息",message: res.message});
+							$.growl.notice({title: "MESSAGE",message: res.message});
 						},
 						error: function(xhr) {
 							$('#message').val(xhr.responseJSON.message)
-							$.growl.warning({title: "警告", message: xhr.responseJSON.message });
+							$.growl.warning({title: "WARNING", message: xhr.responseJSON.message });
 						}
 					});
 				})
@@ -105,11 +118,11 @@
 						success:  function(res) {
 							$('#message').val(res.message)
 							$('#size').val(res.size)
-							$.growl.notice({title: "信息",message: res.message});
+							$.growl.notice({title: "MESSAGE",message: res.message});
 						},
 						error: function(xhr) {
 							$('#message').val(xhr.responseJSON.message)
-							$.growl.warning({title: "警告", message: xhr.responseJSON.message });
+							$.growl.warning({title: "WARNING", message: xhr.responseJSON.message });
 						}
 					});
 				})
