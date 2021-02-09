@@ -37,7 +37,7 @@ func main() {
 }
 
 func State(c *gin.Context) {
-	public(c)
+	public(c, "当前无下载任务或已完成下载")
 }
 
 func Download(c *gin.Context) {
@@ -91,7 +91,7 @@ func Download(c *gin.Context) {
 		Resp = client.Do(req)
 	}()
 	time.Sleep(time.Second)
-	public(c)
+	public(c, "下载失败")
 }
 
 func unwrap(num int64) string {
@@ -99,13 +99,11 @@ func unwrap(num int64) string {
 	return fmt.Sprintf("%.2fM", f)
 }
 
-func public(c *gin.Context) {
+func public(c *gin.Context, message string) {
 	if Resp == nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"size":     "",
-			"status":   http.StatusText(http.StatusBadRequest),
-			"message":  "无下载任务或已下载失败",
-			"filename": "",
+			"status":  http.StatusText(http.StatusBadRequest),
+			"message": message,
 		})
 		return
 	}

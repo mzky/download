@@ -102,6 +102,7 @@
 						data: JSON.stringify(data),
 						success:  function(res) {
 							$('#message').val(res.message)
+							$('#size').val(res.size)
 							$.growl.notice({title: "MESSAGE",message: res.message});
 						},
 						error: function(xhr) {
