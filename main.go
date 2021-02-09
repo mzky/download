@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	_ "download/statik"
+
 	"github.com/cavaliercoder/grab"
 	"github.com/gin-gonic/gin"
 	"github.com/rakyll/statik/fs"

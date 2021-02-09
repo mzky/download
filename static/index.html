@@ -75,8 +75,9 @@
 
 		<script>
 			$(document).ready(function(){
-				var addr="http://192.168.0.166:1018";
-				
+				//var addr="http://192.168.0.166:1018";
+				var addr="";
+
 				$('#download').on('click', function() {
 					var data = {
 						link: $('#link').val(),
@@ -88,7 +89,7 @@
 						data: JSON.stringify(data),
 						success:  function(res) {
 							$('#message').val(res.message)
-							$.growl.notice({title: "提醒",message: res.message});
+							$.growl.notice({title: "信息",message: res.message});
 						},
 						error: function(xhr) {
 							$('#message').val(xhr.responseJSON.message)
@@ -104,7 +105,7 @@
 						success:  function(res) {
 							$('#message').val(res.message)
 							$('#size').val(res.size)
-							$.growl.notice({title: "提醒",message: res.message});
+							$.growl.notice({title: "信息",message: res.message});
 						},
 						error: function(xhr) {
 							$('#message').val(xhr.responseJSON.message)
