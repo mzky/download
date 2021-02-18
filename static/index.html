@@ -1,134 +1,132 @@
 <!DOCTYPE html>
 <html lang="en" class="js cssanimations">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>index</title>
-		<meta name="description" content="这是一个 index 页面">
-		<meta name="keywords" content="index">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="renderer" content="webkit">
-		<meta http-equiv="Cache-Control" content="no-siteapp">
-		<link rel="stylesheet" href="./amazeui.min.css">
-		<link rel="stylesheet" href="./app.css">
-		<link href="./jquery.growl.css" rel="stylesheet" type="text/css" />
-	</head>
-	<body data-type="widgets" class="theme-black">
-		<div class="am-g tpl-g">
-			<!-- 内容区域 -->
-			<div class="row-content am-cf">
-				<div class="row">
-					<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
-						<div class="widget am-cf">
-							<div class="widget-head am-cf">
-								<div class="widget-title am-fl">HTTP下载</div>
-							</div>
-							<div class="widget-body am-fr">
-								<form class="am-form tpl-form-line-form">
-									<div class="am-form-group">
-										<label for="link" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">下载地址</strong> <span class="tpl-form-line-small-title">Link</span></label>
-										<div class="am-u-sm-12">
-											<input type="text" class="tpl-form-input am-margin-top-xs" id="link" placeholder="Input Link">
-										</div>
-									</div>
-									
-									<div class="am-form-group">
-										<label for="state" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">下载状态</strong> <span class="tpl-form-line-small-title">State</span></label>
-										<div class="am-u-sm-12">
-											<input type="text" class="tpl-form-input am-margin-top-xs" id="message" readonly="readonly" placeholder="Download State">
-										</div>
-									</div>
-									
-									<div class="am-form-group">
-										<label for="size" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">文件已下载大小</strong> <span class="tpl-form-line-small-title">Size</span></label>
-										<div class="am-u-sm-12">
-											<input type="text" class="tpl-form-input am-margin-top-xs" id="size" readonly="readonly" placeholder="File Size">
-										</div>
-									</div>
-	
-									<div class="am-form-group">
-									</div>
-									<div class="am-form-group">
-										<div class="am-u-sm-4 am-u-sm-push-4">
-											<button type="button" id="download" class="am-btn am-btn-primary tpl-btn-bg-color-success">确定下载</button>
-										</div>
-										<div class="am-u-sm-8 am-u-sm-push-2">
-											<button type="button" id="state" class="am-btn am-btn-primary tpl-btn-bg-color-success">查看状态</button>
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script src="./jquery.min.js"></script>
-		<script src="./jquery.growl.js" type="text/javascript"></script>
-		<style>
-		        #growls.default {
-		            top: 0px!important;
-		            width:62%;
-		        }
-				.blue{
-					color: #00b8d9;
-				}
-				.tpl-form-input .am-margin-top-xs{
-					color: #d5bc8b;
-				}
-				.growl .growl-message {
-					font-size: 18px;
-					line-height: 28px;
-				}
-				.growl .growl-title {
-					font-size: 14px;
-					line-height: 26px;
-				}
-		</style>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <link rel="stylesheet" href="./amazeui.min.css">
+    <link rel="stylesheet" href="./app.css">
+    <link href="./jquery.growl.css" rel="stylesheet" type="text/css" />
+</head>
+<body data-type="widgets" class="theme-black">
+<div class="am-g tpl-g">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">HTTP下载</div>
+                    </div>
+                    <div class="widget-body am-fr">
+                        <form class="am-form tpl-form-line-form">
+                            <div class="am-form-group">
+                                <label for="link" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">下载地址</strong> <span class="tpl-form-line-small-title">Link</span></label>
+                                <div class="am-u-sm-12">
+                                    <input type="text" class="tpl-form-input am-margin-top-xs" id="link" placeholder="Input Link">
+                                </div>
+                            </div>
 
-		<script>
-			$(document).ready(function(){
-				//var addr="http://192.168.0.166:1018";
-				var addr="";
+                            <div class="am-form-group">
+                                <label for="state" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">下载状态</strong> <span class="tpl-form-line-small-title">State</span></label>
+                                <div class="am-u-sm-12">
+                                    <input type="text" class="tpl-form-input am-margin-top-xs" id="message" readonly="readonly" placeholder="Download State">
+                                </div>
+                            </div>
 
-				$('#download').on('click', function() {
-					var data = {
-						link: $('#link').val(),
-					};
-					$.ajax({
-						type: 'POST',
-						url: addr+"/download",
-						contentType: "application/json",
-						data: JSON.stringify(data),
-						success:  function(res) {
-							$('#message').val(res.message)
-							$('#size').val(res.size)
-							$.growl.notice({title: "MESSAGE",message: res.message});
-						},
-						error: function(xhr) {
-							$('#message').val(xhr.responseJSON.message)
-							$.growl.warning({title: "WARNING", message: xhr.responseJSON.message });
-						}
-					});
-				})
-				
-				$('#state').on('click', function() {
-					$.ajax({
-						type: 'GET',
-						url: addr+"/state",
-						success:  function(res) {
-							$('#message').val(res.message)
-							$('#size').val(res.size)
-							$.growl.notice({title: "MESSAGE",message: res.message});
-						},
-						error: function(xhr) {
-							$('#message').val(xhr.responseJSON.message)
-							$.growl.warning({title: "WARNING", message: xhr.responseJSON.message });
-						}
-					});
-				})
-				
-			});
-		</script>
-	</body>
+                            <div class="am-form-group">
+                                <label for="size" class="am-u-sm-12 am-form-label am-text-left"><strong class="blue">已下载大小</strong> <span class="tpl-form-line-small-title">Size</span></label>
+                                <div class="am-u-sm-12">
+                                    <input type="text" class="tpl-form-input am-margin-top-xs" id="size" readonly="readonly" placeholder="File Size">
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-4 am-u-sm-push-4">
+                                    <button type="button" id="download" class="am-btn am-btn-primary tpl-btn-bg-color-success">确定下载</button>
+                                </div>
+                                <div class="am-u-sm-8 am-u-sm-push-2">
+                                    <button type="button" id="state" class="am-btn am-btn-primary tpl-btn-bg-color-success">查看状态</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./jquery.min.js"></script>
+<script src="./jquery.growl.js" type="text/javascript"></script>
+<style>
+    #growls.default {
+        top: 0px!important;
+        width:62%;
+    }
+    .blue{
+        color: #00b8d9;
+    }
+    .tpl-form-input .am-margin-top-xs{
+        color: #d5bc8b;
+    }
+    .growl .growl-message {
+        font-size: 18px;
+        line-height: 28px;
+    }
+    .growl .growl-title {
+        font-size: 14px;
+        line-height: 26px;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        //var addr="http://192.168.0.166:1018";
+        var addr="";
+
+        $('#download').on('click', function() {
+            var data = {
+                link: $('#link').val(),
+            };
+            $.ajax({
+                type: 'POST',
+                url: addr+"/download",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success:  function(res) {
+                    $('#message').val(res.message)
+                    $('#size').val(res.size)
+                    $.growl.notice({title: "MESSAGE",message: res.message});
+                },
+                error: function(xhr) {
+                    $('#message').val(xhr.responseJSON.message)
+                    $.growl.warning({title: "WARNING", message: xhr.responseJSON.message });
+                }
+            });
+        })
+
+        $('#state').on('click', function() {
+            $.ajax({
+                type: 'GET',
+                url: addr+"/state",
+                success:  function(res) {
+                    $('#message').val(res.message)
+                    $('#size').val(res.size)
+                    $.growl.notice({title: "MESSAGE",message: res.message});
+                },
+                error: function(xhr) {
+                    $('#message').val(xhr.responseJSON.message)
+                    $.growl.warning({title: "WARNING", message: xhr.responseJSON.message });
+                }
+            });
+        })
+
+    });
+</script>
+</body>
 </html>
