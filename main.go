@@ -37,7 +37,7 @@ func main() {
 }
 
 func State(c *gin.Context) {
-	public(c, "当前无下载任务或已完成下载")
+	public(c, "无下载任务或已完成下载")
 }
 
 func Download(c *gin.Context) {
@@ -62,7 +62,7 @@ func Download(c *gin.Context) {
 	if !u.IsAbs() {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  http.StatusText(http.StatusBadRequest),
-			"message": "下载地址的URL格式不正确",
+			"message": "下载地址不正确",
 		})
 		return
 	}
@@ -71,7 +71,7 @@ func Download(c *gin.Context) {
 		if !Resp.IsComplete() {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"status":  http.StatusText(http.StatusBadRequest),
-				"message": "仍有下载任务未完成, 不支持多任务下载",
+				"message": "不支持多任务下载",
 			})
 			return
 		}
