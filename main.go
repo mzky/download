@@ -1,31 +1,35 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"flag"
 	"fmt"
-	"github.com/cavaliercoder/grab"
+	"github.com/cavaliergopher/grab/v3/pkg/grabui"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/melbahja/got"
 	"io/fs"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
+	"sync"
 )
 
 //go:embed static
 var static embed.FS
 
 var (
-	Dir  string
-	Resp *grab.Response
+	dir  *string
+	lock sync.Mutex
+	fp   string
 )
 
 type message map[string]string
 
 func main() {
-	Dir = *flag.String("d", "Download", "Save File Directory") //nolint
+	dir = flag.String("d", "Download", "Save File Directory") //nolint
 	Port := flag.String("p", "1018", "Run Port")
 	flag.Parse()
 
@@ -45,9 +49,17 @@ func main() {
 }
 
 func State(c echo.Context) error {
+	if lock.TryLock() {
+		return c.JSON(http.StatusOK, message{
+			"status":  "ok",
+			"message": "已完成下载",
+			"size":    getFileSize(fp),
+		})
+	}
 	return c.JSON(http.StatusOK, message{
 		"status":  "ok",
-		"message": "下载成功111",
+		"message": "正在下载中...",
+		"size":    getFileSize(fp),
 	})
 }
 
@@ -75,8 +87,8 @@ func Download(c echo.Context) error {
 		})
 	}
 
-	g := got.New()
-	if e := g.Download(jsonStr["link"], Dir); e != nil {
+	fp = filepath.Join(*dir, filepath.Base(jsonStr["link"]))
+	if e := download(jsonStr["link"], fp); e != nil {
 		return c.JSON(http.StatusBadRequest, message{
 			"status":  http.StatusText(http.StatusBadRequest),
 			"message": "不支持的地址:" + e.Error(),
@@ -85,10 +97,32 @@ func Download(c echo.Context) error {
 	return c.JSON(http.StatusOK, message{
 		"status":  "ok",
 		"message": "下载成功",
+		"size":    getFileSize(fp),
 	})
 }
 
-func unwrap(num int64) string {
-	f := float64(num) / 1024 / 1024
-	return fmt.Sprintf("%.2fM", f)
+func download(url, dir string) error {
+	lock.Lock()
+	defer lock.Unlock()
+	respch, err := grabui.GetBatch(context.Background(), 0, dir, url)
+	if err != nil {
+		return err
+	}
+
+	failed := 0
+	for resp := range respch {
+		if resp.Err() != nil {
+			failed++
+		}
+		fmt.Println(resp.Size())
+	}
+	return nil
+}
+
+func getFileSize(path string) string {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return "0 MB"
+	}
+	return fmt.Sprintf("%d MB", fileInfo.Size()/1024/1024)
 }
